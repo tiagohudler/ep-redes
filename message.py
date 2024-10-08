@@ -8,3 +8,13 @@ class message:
     code = ""
     action = ""
     message = ""
+    bullets = ""
+    score = ""
+
+    def __init__(self, code, action, message, bullets, score):
+        self.code = code
+        self.action = action
+        self.message = message
+        self.bullets = bullets
+        self.score = score
+
