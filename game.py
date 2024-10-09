@@ -42,6 +42,8 @@ class game:
             if p1Action != DEFEND:  
                 self.p1Lives -= 1
                 self.restart()
+
+        #TODO: consertar o caso dos dois chegarem com 0 vidas
         
         if self.p1Lives == 0 or self.p2Lives == 0:
             if self.p1Lives == 0:
