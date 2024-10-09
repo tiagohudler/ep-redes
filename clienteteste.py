@@ -41,13 +41,13 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             action = input("Enter your action: ")
             print("###############################################\n")
             s.sendall(pickle.dumps(message.message(2, action, "")))
-        elif data.code == '1':
+        elif data.code == 1:
             print(data.message)
             print("\n###############################################\n")
             action = input("Enter your action: ")
             s.sendall(pickle.dumps(message.message(2, action, "")))
         
-        elif data.code == '3':
+        elif data.code == 3:
             print(data.message)
             response = input()
             if response == 'y':

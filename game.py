@@ -53,7 +53,6 @@ class game:
                 self.p1Lives -= 1
                 self.resetBullets()
 
-        #TODO: consertar o caso dos dois chegarem com 0 vidas
         
         if self.p1Lives == 0 or self.p2Lives == 0:
             if self.p1Lives == 0 and self.p2Lives == 0:
@@ -73,11 +72,11 @@ class game:
                 else:
                     self.p2Games += 1
                 self.restart()
-                return '3'
+                return 3
             self.p1Lives = 2
             self.p2Lives = 2
-            return '1'
+            return 1
         
-        return f"Player 1 action: {p1Action}, Player 2 action: {p2Action}\nPlayer 1 lives: {self.p1Lives}\nPlayer 2 lives: {self.p2Lives}"
+        return 2
             
     
