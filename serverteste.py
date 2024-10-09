@@ -44,10 +44,24 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             if result.isnumeric():
                 if result == '1':
                     messagePack = message.message(result, "", f"A rodada acabou. Pontuação: Player 1 ({game.p1Points} x {game.p2Points}) Player 2\nRodadas restantes: {game.rounds}")
+                    client1.sendall(pickle.dumps(messagePack))
+                    client2.sendall(pickle.dumps(messagePack))                 
                 else:
-                    messagePack = message.message(result, "", f"O jogo acabou. Pontuação final: Player 1 ({game.p1Games} x {game.p2Games}) Player 2\nDo you want to play again? (y/n)")	
-                client1.sendall(pickle.dumps(messagePack))
-                client2.sendall(pickle.dumps(messagePack))
+                    messagePack = message.message(result, "", f"O jogo acabou. Pontuação final: Player 1 ({game.p1Games} x {game.p2Games}) Player 2\nDo you want to play again? (y/n)")
+                    client1.sendall(pickle.dumps(messagePack))
+                    client2.sendall(pickle.dumps(messagePack))
+                    data = pickle.loads(client1.recv(1024))
+                    data2 = pickle.loads(client2.recv(1024))
+                    if data.code == 1 and data2.code == 1:
+                        messagePack = message.message(2, "", "Primeira ação")
+                        messagePack.bullets = game.p1Bullets
+                        client1.sendall(pickle.dumps(messagePack))
+                        client2.sendall(pickle.dumps(messagePack))
+                    else:
+                        messagePack = message.message(3, "", "One player doesn't want to play again")
+                        client1.sendall(pickle.dumps(messagePack))
+                        client2.sendall(pickle.dumps(messagePack))
+                        break
             else:
                 messagePack = message.message(2, "", result)
                 messagePack.bullets = game.p1Bullets

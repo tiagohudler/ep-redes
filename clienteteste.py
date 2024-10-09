@@ -49,7 +49,21 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         
         elif data.code == '3':
             print(data.message)
-            break
+            response = input()
+            if response == 'y':
+                s.sendall(pickle.dumps(message.message(1, "", "")))
+            else:
+                s.sendall(pickle.dumps(message.message(3, "", "")))
+            data = pickle.loads(s.recv(1024))
+
+            if data.code == 3:
+                print(data.message)
+                break
+            else:
+                print("\n###############################################\n"+data.message)
+                action = input("Enter your action: ")
+                s.sendall(pickle.dumps(message.message(2, action, "")))
+
         else:
             print("Invalid message")
             break

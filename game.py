@@ -56,6 +56,12 @@ class game:
         #TODO: consertar o caso dos dois chegarem com 0 vidas
         
         if self.p1Lives == 0 or self.p2Lives == 0:
+            if self.p1Lives == 0 and self.p2Lives == 0:
+                self.resetBullets()
+                self.p1Lives += 1
+                self.p2Lives += 1
+                return "Both players lost all their lives, so both are alive with 1 life"
+
             if self.p1Lives == 0:
                 self.p2Points += 1
             else:
