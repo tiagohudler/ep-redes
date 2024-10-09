@@ -28,8 +28,10 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 
     game = game.game()
 
-    client1.sendall(pickle.dumps(message.message(2, "", "Primeira ação")))
-    client2.sendall(pickle.dumps(message.message(2, "", "Primeira ação")))
+    messagePack = message.message(2, "", "Primeira ação")
+    messagePack.bullets = game.p1Bullets
+    client1.sendall(pickle.dumps(messagePack))
+    client2.sendall(pickle.dumps(messagePack))
 
     while True:
         #TODO: consertar a ordem dos players
@@ -40,7 +42,10 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         if data.code == 2 and data2.code == 2:
             result = game.action(data.action, data2.action)
             if result.isnumeric():
-                messagePack = message.message(result, "", f"A rodada acabou. Pontuação: {game.p1Points} x {game.p2Points}\nRodadas restantes: {game.rounds}")
+                if result == '1':
+                    messagePack = message.message(result, "", f"A rodada acabou. Pontuação: Player 1 ({game.p1Points} x {game.p2Points}) Player 2\nRodadas restantes: {game.rounds}")
+                else:
+                    messagePack = message.message(result, "", f"O jogo acabou. Pontuação final: Player 1 ({game.p1Games} x {game.p2Games}) Player 2\nDo you want to play again? (y/n)")	
                 client1.sendall(pickle.dumps(messagePack))
                 client2.sendall(pickle.dumps(messagePack))
             else:

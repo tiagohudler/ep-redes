@@ -5,6 +5,8 @@ SHOOT = "SHOOT"
 RELOAD = "RELOAD"
 
 class game:
+    p1Games = 0
+    p2Games = 0
     p1Points = 0
     p2Points = 0
     rounds = 3
@@ -13,7 +15,15 @@ class game:
     p1Bullets = 1
     p2Bullets = 1
 
+    def resetBullets(self):
+        self.p1Bullets = 1
+        self.p2Bullets = 1
     def restart(self):
+        self.p1Points = 0
+        self.p2Points = 0
+        self.rounds = 3
+        self.p1Lives = 2
+        self.p2Lives = 2
         self.p1Bullets = 1
         self.p2Bullets = 1
 
@@ -34,14 +44,14 @@ class game:
             self.p1Bullets -= 1
             if p2Action != DEFEND:
                 self.p2Lives -= 1
-                self.restart()
+                self.resetBullets()
 
 
         if p2Shot:
             self.p2Bullets -= 1
             if p1Action != DEFEND:  
                 self.p1Lives -= 1
-                self.restart()
+                self.resetBullets()
 
         #TODO: consertar o caso dos dois chegarem com 0 vidas
         
@@ -51,7 +61,12 @@ class game:
             else:
                 self.p1Points += 1
             self.rounds -= 1
-            if self.rounds == 0:
+            if self.rounds < self.p1Points or self.rounds < self.p2Points:
+                if self.p1Points > self.p2Points:
+                    self.p1Games += 1
+                else:
+                    self.p2Games += 1
+                self.restart()
                 return '3'
             self.p1Lives = 2
             self.p2Lives = 2
