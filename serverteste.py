@@ -5,6 +5,11 @@ import message
 HOST = "127.0.0.1"  # Standard loopback interface address (localhost)
 PORT = 65432  # Port to listen on (non-privileged ports are > 1023)
 
+
+#def PlayersLoop(connec, playerId):
+
+
+
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 
 
@@ -12,9 +17,11 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.listen(2)
     print("Waiting for players to connect")
     client1, addr1 = s.accept()
+    print(client1)
     client1.sendall(pickle.dumps(message.message(0, "", "")))
     print("Player 1 connected. Waiting for player 2 to connect")
     client2, addr2 = s.accept()
+    print(client2)
     client1.sendall(pickle.dumps(message.message(1, "", "")))
     client2.sendall(pickle.dumps(message.message(1, "", "")))
     print("Player 2 connected. Starting game")
@@ -26,6 +33,8 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 
     while True:
         #TODO: consertar a ordem dos players
+        # depois de conectar aos clientes, fazer 1 thread pra cada: Thread1 = threading.Thread(target=playerLoop, args=(conn1,#id do player)).start() 
+        # conn1 (é um socket) veio de: conn1, addr1 = server_socket.accept()
         data = pickle.loads(client1.recv(1024))
         data2 = pickle.loads(client2.recv(1024))
         if data.code == 2 and data2.code == 2:
