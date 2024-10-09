@@ -38,7 +38,12 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                 data.message
             )
             print("Bullets: ", data.bullets)
-            action = input("Enter your action: ")
+            while True:
+                action = input("Enter your action: ")
+                if (action != "DEFEND" and action != "SHOOT" and action != "RELOAD"):
+                    print("Invalid action")
+                else:
+                    break
             print("###############################################\n")
             s.sendall(pickle.dumps(message.message(2, action, "")))
         elif data.code == 1:
