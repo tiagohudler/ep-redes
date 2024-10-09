@@ -21,12 +21,12 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             print("Bullets: ", data.bullets)
             action = input("Enter your action: ")
             s.sendall(pickle.dumps(message.message(2, action, "")))
-        elif data.code == 1:
-            print("Acabou a rodada")
+        elif data.code == '1':
             print(data.message)
-            break
+            action = input("Enter your action: ")
+            s.sendall(pickle.dumps(message.message(2, action, "")))
         
-        elif data.code == 3:
+        elif data.code == '3':
             print(data.message)
             break
         else:

@@ -30,8 +30,9 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         if data.code == 2 and data2.code == 2:
             result = game.action(data.action, data2.action)
             if result.isnumeric():
-                client1.sendall(pickle.dumps(message.message(result, "", "")))
-                client2.sendall(pickle.dumps(message.message(result, "", "")))
+                messagePack = message.message(result, "", f"A rodada acabou. Pontuação: {game.p1Points} x {game.p2Points}\nRodadas restantes: {game.rounds}")
+                client1.sendall(pickle.dumps(messagePack))
+                client2.sendall(pickle.dumps(messagePack))
             else:
                 messagePack = message.message(2, "", result)
                 messagePack.bullets = game.p1Bullets

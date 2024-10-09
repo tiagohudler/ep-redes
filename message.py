@@ -10,11 +10,10 @@ class message:
     message = ""
     bullets = ""
     score = ""
+    rounds = ""
 
-    def __init__(self, code, action, message, bullets, score):
+    def __init__(self, code, action, message):
         self.code = code
         self.action = action
         self.message = message
-        self.bullets = bullets
-        self.score = score
 

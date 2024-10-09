@@ -50,10 +50,10 @@ class game:
                 self.p1Points += 1
             self.rounds -= 1
             if self.rounds == 0:
-                return 3
+                return '3'
             self.p1Lives = 2
             self.p2Lives = 2
-            return 1
+            return '1'
         
         return f"Player 1 action: {p1Action}, Player 2 action: {p2Action}\nPlayer 1 lives: {self.p1Lives}\nPlayer 2 lives: {self.p2Lives}"
             
