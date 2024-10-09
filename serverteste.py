@@ -25,6 +25,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     client2.sendall(pickle.dumps(message.message(2, "", "Primeira ação")))
 
     while True:
+        #TODO: consertar a ordem dos players
         data = pickle.loads(client1.recv(1024))
         data2 = pickle.loads(client2.recv(1024))
         if data.code == 2 and data2.code == 2:
