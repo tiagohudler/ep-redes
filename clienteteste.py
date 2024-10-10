@@ -1,13 +1,55 @@
 import socket, pickle
 import message
+import threading
+import tkinter as tk
 
 HOST = "127.0.0.1"  # The server's hostname or IP address
 PORT = 65432  # The port used by the server
 
+def receive_chat(sock):
+    while True:
+        try:
+            message = sock.recv(1024).decode()
+            if message:
+                chat_box.insert(tk.END, message + "\n")
+        except:
+            break
+
+def send_chat(sock):
+    message = input_field.get()
+    chat_box.insert(tk.END, "Você: " + message + "\n")
+    sock.send(message.encode())
+    input_field.delete(0, tk.END)
+
+# Função para configurar a janela do chat
+def start_chat_interface(sock):
+    global chat_box, input_field
+
+    window = tk.Tk()
+    window.title("Chat do Jogo")
+
+    chat_box = tk.Text(window, height=15, width=50)
+    chat_box.pack()
+
+    input_field = tk.Entry(window, width=50)
+    input_field.pack()
+
+    send_button = tk.Button(window, text="Enviar", command=lambda: send_chat(sock))
+    send_button.pack()
+
+    threading.Thread(target=receive_chat, args=(sock,)).start()
+    threading.Thread(target=send_chat, args=(sock,)).start()
+
+    window.mainloop()
 
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.connect((HOST, PORT))
+    chat = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    chat.connect((HOST, PORT))
+    
+    threading.Thread(target=start_chat_interface, args=(chat,)).start()
+
     data = pickle.loads(s.recv(1024))
     if data.code == 0:
         print("Waiting for opponent")

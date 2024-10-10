@@ -1,11 +1,31 @@
 import socket, pickle
 import game
 import message
-
+import threading
 HOST = "127.0.0.1"  # Standard loopback interface address (localhost)
 PORT = 65432  # Port to listen on (non-privileged ports are > 1023)
 
+# Função para lidar com o chat
+def handle_chat(conn, player_id, chats):
+    while True:
+        try:
+            message = conn.recv(1024).decode()
+            if not message:
+                break
+            print(f"Jogador {player_id} disse: {message}")
+            # Aqui você pode repassar as mensagens para o outro jogador
+            broadcast_message(f"Jogador {player_id}: {message}", conn, chats)
+        except:
+            break
 
+# Função para enviar mensagens de chat para todos os jogadores
+def broadcast_message(message, conn, chats):
+    for client in chats:
+        if client != conn:
+            try:
+                client.send(message.encode())
+            except:
+                continue
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 
@@ -14,14 +34,21 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.listen(2)
     print("Waiting for players to connect")
     client1, addr1 = s.accept()
+    chat1, addrChat1 = s.accept()
     print(client1)
     client1.sendall(pickle.dumps(message.message(0, "", "")))
     print("Player 1 connected. Waiting for player 2 to connect")
     client2, addr2 = s.accept()
+    chat2, addrChat2 = s.accept()
     print(client2)
     client1.sendall(pickle.dumps(message.message(1, "", "")))
     client2.sendall(pickle.dumps(message.message(1, "", "")))
     print("Player 2 connected. Starting game")
+
+    chats = [chat1, chat2]
+    
+    threading.Thread(target=handle_chat, args=(chat1, 1, chats)).start()
+    threading.Thread(target=handle_chat, args=(chat2, 2, chats)).start()
 
     game = game.game()
 
@@ -31,6 +58,8 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     messagePack.message = "First action\nYou are player 2"
     client2.sendall(pickle.dumps(messagePack))
 
+    clients = [client1, client2]
+    
     while True:
         
         data = pickle.loads(client1.recv(1024))
