@@ -70,7 +70,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         "Game start:\n"
     )
 
-    bullets = 1
+    s.sendall(b"Pronto para jogar")
     
     while True:
         data = pickle.loads(s.recv(1024))

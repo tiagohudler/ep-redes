@@ -31,7 +31,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 
 
     s.bind((HOST, PORT))
-    s.listen(2)
+    s.listen(4)
     print("Waiting for players to connect")
     client1, addr1 = s.accept()
     chat1, addrChat1 = s.accept()
@@ -49,6 +49,9 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     
     threading.Thread(target=handle_chat, args=(chat1, 1, chats)).start()
     threading.Thread(target=handle_chat, args=(chat2, 2, chats)).start()
+
+    print("Cliente 1 " + client1.recv(1024).decode("utf-8"))
+    print("Cliente 1 " + client2.recv(1024).decode("utf-8"))
 
     game = game.game()
 
