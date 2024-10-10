@@ -6,9 +6,6 @@ HOST = "127.0.0.1"  # Standard loopback interface address (localhost)
 PORT = 65432  # Port to listen on (non-privileged ports are > 1023)
 
 
-#def PlayersLoop(connec, playerId):
-
-
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 
@@ -49,7 +46,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                              
             elif result == 3:
 
-                messagePack = message.message(result, "", f"The game is over. Final score: Player 1 ({game.p1Games} x {game.p2Games}) Player 2\nDo you want to play again? (y/n)")
+                messagePack = message.message(result, "", f"{game.roundWinner} wins. The game is over. Overall final score: Player 1 ({game.p1Games} x {game.p2Games}) Player 2\nDo you want to play again? (y/n)")
                 client1.sendall(pickle.dumps(messagePack))
                 client2.sendall(pickle.dumps(messagePack))
                 data = pickle.loads(client1.recv(1024))

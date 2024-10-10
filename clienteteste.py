@@ -42,6 +42,8 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                 action = input("Enter your action: ")
                 if (action != "DEFEND" and action != "SHOOT" and action != "RELOAD"):
                     print("Invalid action")
+                elif (action == "SHOOT" and data.bullets == 0):
+                    print("You can only shoot if you have bullets.")
                 else:
                     break
             print("###############################################\n")

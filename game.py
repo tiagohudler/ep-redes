@@ -14,6 +14,7 @@ class game:
     p2Lives = 2
     p1Bullets = 1
     p2Bullets = 1
+    roundWinner = ''
 
     def resetBullets(self):
         self.p1Bullets = 1
@@ -69,10 +70,13 @@ class game:
             if self.rounds < self.p1Points or self.rounds < self.p2Points:
                 if self.p1Points > self.p2Points:
                     self.p1Games += 1
+                    self.roundWinner = 'Player 1'
                 else:
                     self.p2Games += 1
+                    self.roundWinner = 'Player 2'
                 self.restart()
                 return 3
+            
             self.p1Lives = 2
             self.p2Lives = 2
             return 1
