@@ -62,8 +62,14 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                     client1.sendall(pickle.dumps(messagePack))
                     client2.sendall(pickle.dumps(messagePack))
                     break
-            else:
+            elif result == 2:
                 messagePack = message.message(2, "", f"Player 1 action: {data.action}, Player 2 action: {data2.action}\nPlayer 1 lives: {game.p1Lives}\nPlayer 2 lives: {game.p2Lives}")
+                messagePack.bullets = game.p1Bullets
+                client1.sendall(pickle.dumps(messagePack))
+                messagePack.bullets = game.p2Bullets
+                client2.sendall(pickle.dumps(messagePack))
+            else:
+                messagePack = message.message(2, "", result)
                 messagePack.bullets = game.p1Bullets
                 client1.sendall(pickle.dumps(messagePack))
                 messagePack.bullets = game.p2Bullets
