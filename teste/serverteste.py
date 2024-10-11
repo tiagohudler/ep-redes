@@ -4,7 +4,7 @@ import message
 import threading
 HOST = "127.0.0.1"  # Standard loopback interface address (localhost)
 PORT = 65432  # Port to listen on (non-privileged ports are > 1023)
- 
+
 # Função para lidar com o chat
 def handle_chat(conn, player_id, chats):
     while True:
@@ -12,9 +12,9 @@ def handle_chat(conn, player_id, chats):
             message = conn.recv(1024).decode()
             if not message:
                 break
-            print(f"Player {player_id} sent: {message}")
+            print(f"Jogador {player_id} disse: {message}")
             # Aqui você pode repassar as mensagens para o outro jogador
-            broadcast_message(f"Player {player_id}: {message}", conn, chats)
+            broadcast_message(f"Jogador {player_id}: {message}", conn, chats)
         except:
             break
 
@@ -22,7 +22,7 @@ def handle_chat(conn, player_id, chats):
 def broadcast_message(message, conn, chats):
     for client in chats:
         if client != conn:
-            print(f"Sending message to {client}")
+            print(f"Enviando mensagem para {client}")
             try:
                 client.send(message.encode())
             except:

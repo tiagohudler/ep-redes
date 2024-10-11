@@ -8,8 +8,9 @@ PORT = 65432  # The port used by the server
 
 def send_chat(sock):
     message = input_field.get()
-    chat_box.insert(tk.END, "You: " + message + "\n")
+    chat_box.insert(tk.END, "Você: " + message + "\n")
     sock.send(message.encode())
+    print("ENVIEI UMA MENSAGEM MUITO FODA")
     input_field.delete(0, tk.END)
 
 # Função para configurar a janela do chat
@@ -29,7 +30,7 @@ def start_chat_interface():
     global chat_box, input_field
 
     window = tk.Tk()
-    window.title("Game Chat")
+    window.title("Chat do Jogo")
 
     chat_box = tk.Text(window, height=15, width=50)
     chat_box.pack()
@@ -37,7 +38,7 @@ def start_chat_interface():
     input_field = tk.Entry(window, width=50)
     input_field.pack()
 
-    send_button = tk.Button(window, text="Send", command=lambda: send_chat(chat_socket))
+    send_button = tk.Button(window, text="Enviar", command=lambda: send_chat(chat_socket))
     send_button.pack()
 
     threading.Thread(target=receive_chat, args=(), daemon=True).start()
@@ -68,6 +69,7 @@ print(data.code)
 if data.code == 0:
     print("Waiting for opponent")
     data = server_socket.recv(1024)
+    print("FODASE A PORRA DA MENSAGEM DO IF CODE.CODE == 0!")
 
 print(
     "#############################################################################################################\n"
@@ -86,9 +88,9 @@ print(
 )
 
 while True:
-    #print("Aguardando dados do servidor...")
+    print("Aguardando dados do servidor...")
     data = pickle.loads(server_socket.recv(1024))
-    #print("Dados recebidos: %s", data)
+    print("Dados recebidos: %s", data)
     if data.code == 2:
         print(
             "###############################################\n"+

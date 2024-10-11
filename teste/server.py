@@ -2,69 +2,44 @@ import socket, pickle
 import game
 import message
 import threading
+from client import ClientThread
+
 HOST = "127.0.0.1"  # Standard loopback interface address (localhost)
 PORT = 65432  # Port to listen on (non-privileged ports are > 1023)
- 
-# Função para lidar com o chat
-def handle_chat(conn, player_id, chats):
-    while True:
-        try:
-            message = conn.recv(1024).decode()
-            if not message:
-                break
-            print(f"Player {player_id} sent: {message}")
-            # Aqui você pode repassar as mensagens para o outro jogador
-            broadcast_message(f"Player {player_id}: {message}", conn, chats)
-        except:
-            break
-
-# Função para enviar mensagens de chat para todos os jogadores
-def broadcast_message(message, conn, chats):
-    for client in chats:
-        if client != conn:
-            print(f"Sending message to {client}")
-            try:
-                client.send(message.encode())
-            except:
-                continue
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 
-
     s.bind((HOST, PORT))
-    s.listen(4)
+    s.listen(2)
     print("Waiting for players to connect")
     client1, addr1 = s.accept()
-    chat1, addrChat1 = s.accept()
     print(client1)
     client1.sendall(pickle.dumps(message.message(0, "", "")))
     print("Player 1 connected. Waiting for player 2 to connect")
     client2, addr2 = s.accept()
-    chat2, addrChat2 = s.accept()
-    print(client2, addrChat2)
     client1.sendall(pickle.dumps(message.message(1, "", "")))
     client2.sendall(pickle.dumps(message.message(1, "", "")))
     print("Player 2 connected. Starting game")
 
-    chats = [chat1, chat2]
-    
-    threading.Thread(target=handle_chat, args=(chat1, 1, chats)).start()
-    threading.Thread(target=handle_chat, args=(chat2, 2, chats)).start()
-
     game = game.game()
+
+    player1Thread = ClientThread(client1, 1, True)
+    player2Thread = ClientThread(client2, 2, True)
+    
+    player1Thread.start()
+    player2Thread.start()
 
     messagePack = message.message(2, "", "First action\nYou are player 1")
     messagePack.bullets = game.p1Bullets
     client1.sendall(pickle.dumps(messagePack))
     messagePack.message = "First action\nYou are player 2"
     client2.sendall(pickle.dumps(messagePack))
-    print("ENVIEI MENSAGEM PRO CLIENT 2")
 
-    clients = [client1, client2]
     
     while True:
-        
+        print('antes de receber')
         data = pickle.loads(client1.recv(1024))
+        print('travou')
         data2 = pickle.loads(client2.recv(1024))
         if data.code == 2 and data2.code == 2:
             result = game.action(data.action, data2.action)
