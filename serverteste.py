@@ -22,6 +22,7 @@ def handle_chat(conn, player_id, chats):
 def broadcast_message(message, conn, chats):
     for client in chats:
         if client != conn:
+            print(f"Enviando mensagem para {client}")
             try:
                 client.send(message.encode())
             except:
@@ -40,7 +41,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     print("Player 1 connected. Waiting for player 2 to connect")
     client2, addr2 = s.accept()
     chat2, addrChat2 = s.accept()
-    print(client2)
+    print(client2, addrChat2)
     client1.sendall(pickle.dumps(message.message(1, "", "")))
     client2.sendall(pickle.dumps(message.message(1, "", "")))
     print("Player 2 connected. Starting game")
@@ -50,9 +51,6 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     threading.Thread(target=handle_chat, args=(chat1, 1, chats)).start()
     threading.Thread(target=handle_chat, args=(chat2, 2, chats)).start()
 
-    print("Cliente 1 " + client1.recv(1024).decode("utf-8"))
-    print("Cliente 1 " + client2.recv(1024).decode("utf-8"))
-
     game = game.game()
 
     messagePack = message.message(2, "", "First action\nYou are player 1")
@@ -60,6 +58,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     client1.sendall(pickle.dumps(messagePack))
     messagePack.message = "First action\nYou are player 2"
     client2.sendall(pickle.dumps(messagePack))
+    print("ENVIEI MENSAGEM PRO CLIENT 2")
 
     clients = [client1, client2]
     
@@ -113,5 +112,3 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         else:
             print("Invalid message")
             break
-
-
