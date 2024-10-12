@@ -1,8 +1,11 @@
-import socket, pickle
+import socket, pickle 
 import game
 import message
 import threading
-HOST = "127.0.0.1"  # Standard loopback interface address (localhost)
+
+HOST = "192.168.15.9"
+#HOST = "192.168.15.85"
+#HOST = "127.0.0.1"  # Standard loopback interface address (localhost)
 PORT = 65432  # Port to listen on (non-privileged ports are > 1023)
  
 # Função para lidar com o chat
@@ -36,12 +39,10 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     print("Waiting for players to connect")
     client1, addr1 = s.accept()
     chat1, addrChat1 = s.accept()
-    print(client1)
     client1.sendall(pickle.dumps(message.message(0, "", "")))
     print("Player 1 connected. Waiting for player 2 to connect")
     client2, addr2 = s.accept()
     chat2, addrChat2 = s.accept()
-    print(client2, addrChat2)
     client1.sendall(pickle.dumps(message.message(1, "", "")))
     client2.sendall(pickle.dumps(message.message(1, "", "")))
     print("Player 2 connected. Starting game")
@@ -50,6 +51,9 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     
     threading.Thread(target=handle_chat, args=(chat1, 1, chats)).start()
     threading.Thread(target=handle_chat, args=(chat2, 2, chats)).start()
+    
+    print("Cliente 1 " + client1.recv(1024).decode("utf-8"))
+    print("Cliente 2 " + client2.recv(1024).decode("utf-8"))
 
     game = game.game()
 
@@ -58,7 +62,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     client1.sendall(pickle.dumps(messagePack))
     messagePack.message = "First action\nYou are player 2"
     client2.sendall(pickle.dumps(messagePack))
-    print("ENVIEI MENSAGEM PRO CLIENT 2")
+
 
     clients = [client1, client2]
     

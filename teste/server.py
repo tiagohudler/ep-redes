@@ -23,8 +23,11 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 
     game = game.game()
 
+    
     player1Thread = ClientThread(client1, 1, True)
     player2Thread = ClientThread(client2, 2, True)
+    
+    
     
     player1Thread.start()
     player2Thread.start()

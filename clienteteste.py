@@ -3,12 +3,17 @@ import message
 import threading
 import tkinter as tk
 
-HOST = "127.0.0.1"  # The server's hostname or IP address
+HOST = "192.168.15.9"
+#HOST = "192.168.15.85"
+#HOST = "127.0.0.1"  # The server's hostname or IP address
 PORT = 65432  # The port used by the server
 
 def send_chat(sock):
     message = input_field.get()
+    chat_box.config(state=tk.NORMAL)  # Permite inserir a nova mensagem
     chat_box.insert(tk.END, "You: " + message + "\n")
+    chat_box.config(state=tk.DISABLED)
+    chat_box.see(tk.END)
     sock.send(message.encode())
     input_field.delete(0, tk.END)
 
@@ -22,7 +27,10 @@ def start_chat_interface():
             try:
                 message = chat_socket.recv(1024).decode()
                 if message:
+                    chat_box.config(state=tk.NORMAL)  # Permite inserir a nova mensagem
                     chat_box.insert(tk.END, message + "\n")
+                    chat_box.config(state=tk.DISABLED)
+                    chat_box.see(tk.END)
             except:
                 break
     
@@ -33,6 +41,7 @@ def start_chat_interface():
 
     chat_box = tk.Text(window, height=15, width=50)
     chat_box.pack()
+    chat_box.config(state=tk.DISABLED)
 
     input_field = tk.Entry(window, width=50)
     input_field.pack()
@@ -58,13 +67,11 @@ def receive_full_message(sock):
 
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server_socket.connect((HOST, PORT))
-# chat_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-# chat_socket.connect((HOST, PORT))
 
 threading.Thread(target=start_chat_interface, args=(), daemon=True).start()
 
 data = pickle.loads(server_socket.recv(1024))
-print(data.code)
+
 if data.code == 0:
     print("Waiting for opponent")
     data = server_socket.recv(1024)
@@ -86,9 +93,9 @@ print(
 )
 
 while True:
-    #print("Aguardando dados do servidor...")
+
     data = pickle.loads(server_socket.recv(1024))
-    #print("Dados recebidos: %s", data)
+    
     if data.code == 2:
         print(
             "###############################################\n"+
