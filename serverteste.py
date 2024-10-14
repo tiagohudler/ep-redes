@@ -3,10 +3,10 @@ import game
 import message
 import threading
 
-HOST = "192.168.15.9"
+#HOST = "192.168.15.9"
 #HOST = "192.168.15.85"
-#HOST = "127.0.0.1"  # Standard loopback interface address (localhost)
-PORT = 65432  # Port to listen on (non-privileged ports are > 1023)
+HOST = "127.0.0.1"  # Endereço de interface de loopback padrão (localhost)
+PORT = 65432  # Porta para escutar (portas não privilegiadas são > 1023)
  
 # Função para lidar com o chat
 def handle_chat(conn, player_id, chats):
@@ -16,13 +16,12 @@ def handle_chat(conn, player_id, chats):
             if not message:
                 break
             print(f"Player {player_id} sent: {message}")
-            # Aqui você pode repassar as mensagens para o outro jogador
-            broadcast_message(f"Player {player_id}: {message}", conn, chats)
+            transmit_message(f"Player {player_id}: {message}", conn, chats)
         except:
             break
 
-# Função para enviar mensagens de chat para todos os jogadores
-def broadcast_message(message, conn, chats):
+# Função para transmitir mensagens de chat para o outro jogador
+def transmit_message(message, conn, chats):
     for client in chats:
         if client != conn:
             print(f"Sending message to {client}")
@@ -52,8 +51,8 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     threading.Thread(target=handle_chat, args=(chat1, 1, chats)).start()
     threading.Thread(target=handle_chat, args=(chat2, 2, chats)).start()
     
-    print("Cliente 1 " + client1.recv(1024).decode("utf-8"))
-    print("Cliente 2 " + client2.recv(1024).decode("utf-8"))
+    print("Client 1 " + client1.recv(1024).decode("utf-8"))
+    print("Client 2 " + client2.recv(1024).decode("utf-8"))
 
     game = game.game()
 

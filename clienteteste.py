@@ -3,14 +3,14 @@ import message
 import threading
 import tkinter as tk
 
-HOST = "192.168.15.9"
+#HOST = "192.168.15.9"
 #HOST = "192.168.15.85"
-#HOST = "127.0.0.1"  # The server's hostname or IP address
+HOST = "127.0.0.1"  # The server's hostname or IP address
 PORT = 65432  # The port used by the server
 
 def send_chat(sock):
     message = input_field.get()
-    chat_box.config(state=tk.NORMAL)  # Permite inserir a nova mensagem
+    chat_box.config(state=tk.NORMAL) 
     chat_box.insert(tk.END, "You: " + message + "\n")
     chat_box.config(state=tk.DISABLED)
     chat_box.see(tk.END)
@@ -27,7 +27,7 @@ def start_chat_interface():
             try:
                 message = chat_socket.recv(1024).decode()
                 if message:
-                    chat_box.config(state=tk.NORMAL)  # Permite inserir a nova mensagem
+                    chat_box.config(state=tk.NORMAL) 
                     chat_box.insert(tk.END, message + "\n")
                     chat_box.config(state=tk.DISABLED)
                     chat_box.see(tk.END)
@@ -59,12 +59,11 @@ def receive_full_message(sock):
         data = sock.recv(1024)
         buffer += data
         try:
-            return pickle.loads(buffer)  # Tentativa de desserializar os dados
+            return pickle.loads(buffer) 
         except (pickle.UnpicklingError, EOFError):
-            # Se falhar, continua recebendo até que a mensagem esteja completa
+            
             continue
         
-
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server_socket.connect((HOST, PORT))
 
@@ -91,6 +90,8 @@ print(
     "#############################################################################################################\n"
     "Game start:\n"
 )
+
+server_socket.sendall(b"Ready to play")
 
 while True:
 
