@@ -139,10 +139,13 @@ while True:
 
         
         data = pickle.loads(server_socket.recv(1024))
-
+        
+        # Algum player não quer jogar novamente
         if data.code == 3:
             print(data.message)
             break
+        
+        # Ambos os players querem jogar novamente
         else:
             print("\n###############################################\n"+data.message)
             action = input("Enter your action: ")

@@ -29,11 +29,12 @@ class game:
         self.p2Bullets = 1
 
     def action(self, p1Action, p2Action):
+        
         p1Shot = False
         p2Shot = False
-        if p1Action == SHOOT and self.p1Bullets > 0:
+        if p1Action == SHOOT:
             p1Shot = True
-        if p2Action == SHOOT and self.p2Bullets > 0:
+        if p2Action == SHOOT:
             p2Shot = True
         
         if p1Action == RELOAD:
@@ -56,17 +57,23 @@ class game:
 
         
         if self.p1Lives == 0 or self.p2Lives == 0:
+
+            # Ambos morreram
             if self.p1Lives == 0 and self.p2Lives == 0:
                 self.resetBullets()
                 self.p1Lives += 1
                 self.p2Lives += 1
                 return "Both players lost all their lives, so both are alive with 1 life"
 
+            # Quem não morreu ganha ponto
             if self.p1Lives == 0:
                 self.p2Points += 1
             else:
                 self.p1Points += 1
+
             self.rounds -= 1
+
+            # Fim de jogo
             if self.rounds < self.p1Points or self.rounds < self.p2Points:
                 if self.p1Points > self.p2Points:
                     self.p1Games += 1
