@@ -49,7 +49,7 @@ def start_chat_interface():
     send_button = tk.Button(window, text="Send", command=lambda: send_chat(chat_socket))
     send_button.pack()
 
-    threading.Thread(target=receive_chat, args=(), daemon=True).start()
+    threading.Thread(target=receive_chat, args=()).start()
 
     window.mainloop()
 
@@ -97,6 +97,7 @@ while True:
 
     data = pickle.loads(server_socket.recv(1024))
     
+    # Mensagem de jogo
     if data.code == 2:
         print(
             "###############################################\n"+
@@ -113,19 +114,30 @@ while True:
                 break
         print("###############################################\n")
         server_socket.sendall(pickle.dumps(message.message(2, action, "")))
+    
+    # Fim de rodada
     elif data.code == 1:
         print(data.message)
         print("\n###############################################\n")
         action = input("Enter your action: ")
         server_socket.sendall(pickle.dumps(message.message(2, action, "")))
     
+    # Fim de jogo
     elif data.code == 3:
         print(data.message)
-        response = input()
-        if response == 'y':
-            server_socket.sendall(pickle.dumps(message.message(1, "", "")))
-        else:
-            server_socket.sendall(pickle.dumps(message.message(3, "", "")))
+        
+        while True:
+            response = input()
+            if response == 'y' or response == 'Y':
+                server_socket.sendall(pickle.dumps(message.message(1, "", "")))
+                break
+            elif response == 'n' or response == 'N':
+                server_socket.sendall(pickle.dumps(message.message(3, "", "")))
+                break
+            else:
+                print("Please respond with 'y' or 'n'")
+
+        
         data = pickle.loads(server_socket.recv(1024))
 
         if data.code == 3:
@@ -134,7 +146,16 @@ while True:
         else:
             print("\n###############################################\n"+data.message)
             action = input("Enter your action: ")
+            while True:
+                action = input("Enter your action: ")
+                if (action != "DEFEND" and action != "SHOOT" and action != "RELOAD"):
+                    print("Invalid action")
+                elif (action == "SHOOT" and data.bullets == 0):
+                    print("You can only shoot if you have bullets.")
+                else:
+                    break
             server_socket.sendall(pickle.dumps(message.message(2, action, "")))
+
 
     else:
         print("Invalid message")
