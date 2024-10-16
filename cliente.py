@@ -6,7 +6,8 @@ import tkinter as tk
 #INSERT BELOW THE SERVER'S IP WHEN TESTING WITH MULTIPLE MACHINES 
 #HOST = "xxx.xx.xx.xx"
 #COMMENT THE LINE BELOW WHEN TESTING WITH MULTIPLE MACHINES 
-HOST = "127.0.0.1"  # The server's hostname or IP address
+HOST = input("Escreva o IP do servidor:")
+#HOST = "127.0.0.1"  # The server's hostname or IP address
 PORT = 65432  # The port used by the server
 
 # Function called when client sends a message on chat: print it and send it
@@ -49,7 +50,7 @@ def start_chat_interface():
     input_field.pack()
 
     input_field.bind("<Return>", lambda event: send_chat(chat_socket))
-    
+
     send_button = tk.Button(window, text="Send", command=lambda: send_chat(chat_socket))
     send_button.pack()
 

@@ -6,7 +6,8 @@ import threading
 #INSERT BELOW THE SERVER'S IP WHEN TESTING WITH MULTIPLE MACHINES 
 #HOST = "xxx.xx.xx.xx"
 #COMMENT THE LINE BELOW WHEN TESTING WITH MULTIPLE MACHINES 
-HOST = "127.0.0.1"  # Endereço de interface de loopback padrão (localhost)
+HOST = input("Escreva o IP do servidor:")
+#HOST = "127.0.0.1"  # Endereço de interface de loopback padrão (localhost)
 PORT = 65432  # Porta para escutar (portas não privilegiadas são > 1023)
  
 # Listens to player's chat messages and broadcast them
@@ -127,7 +128,6 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             print(data.message)
             print(data2.message)
             break
-         # Treats invalid messages
         else:
             print("Invalid message")
             break
