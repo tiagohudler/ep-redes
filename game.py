@@ -1,4 +1,4 @@
-# CONSTANTES
+# CONSTANTS
 
 DEFEND = "DEFEND"
 SHOOT = "SHOOT"
@@ -28,6 +28,7 @@ class game:
         self.p1Bullets = 1
         self.p2Bullets = 1
 
+    # Deals with player's actions and game logic
     def action(self, p1Action, p2Action):
         
         p1Shot = False
@@ -58,14 +59,14 @@ class game:
         
         if self.p1Lives == 0 or self.p2Lives == 0:
 
-            # Ambos morreram
+            # Both died
             if self.p1Lives == 0 and self.p2Lives == 0:
                 self.resetBullets()
                 self.p1Lives += 1
                 self.p2Lives += 1
                 return "Both players lost all their lives, so both are alive with 1 life"
 
-            # Quem não morreu ganha ponto
+            # Whoever didn't die gets a point
             if self.p1Lives == 0:
                 self.p2Points += 1
             else:
@@ -73,7 +74,7 @@ class game:
 
             self.rounds -= 1
 
-            # Fim de jogo
+            # End game
             if self.rounds < self.p1Points or self.rounds < self.p2Points:
                 if self.p1Points > self.p2Points:
                     self.p1Games += 1

@@ -1,8 +1,8 @@
-# Código
-# 0 - waiting for opponent
-# 1 - game start
-# 2 - action
-# 3 - game over
+# Codes
+# 0 - Waiting for opponent
+# 1 - Game start
+# 2 - Action
+# 3 - Game over
 
 class message:
     code = ""

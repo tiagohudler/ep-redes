@@ -3,11 +3,13 @@ import message
 import threading
 import tkinter as tk
 
-#HOST = "192.168.15.9"
-#HOST = "192.168.15.85"
+#INSERT BELOW THE SERVER'S IP WHEN TESTING WITH MULTIPLE MACHINES 
+#HOST = "xxx.xx.xx.xx"
+#COMMENT THE LINE BELOW WHEN TESTING WITH MULTIPLE MACHINES 
 HOST = "127.0.0.1"  # The server's hostname or IP address
 PORT = 65432  # The port used by the server
 
+# Function called when client sends a message on chat: print it and send it
 def send_chat(sock):
     message = input_field.get()
     chat_box.config(state=tk.NORMAL) 
@@ -17,7 +19,7 @@ def send_chat(sock):
     sock.send(message.encode())
     input_field.delete(0, tk.END)
 
-# Função para configurar a janela do chat
+# Chat's configuration function
 def start_chat_interface():
     chat_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     chat_socket.connect((HOST, PORT))
@@ -49,28 +51,22 @@ def start_chat_interface():
     send_button = tk.Button(window, text="Send", command=lambda: send_chat(chat_socket))
     send_button.pack()
 
+    # Start a thread for constantly receiving messages from server's broadcast
     threading.Thread(target=receive_chat, args=()).start()
 
     window.mainloop()
 
-def receive_full_message(sock):
-    buffer = b""
-    while True:
-        data = sock.recv(1024)
-        buffer += data
-        try:
-            return pickle.loads(buffer) 
-        except (pickle.UnpicklingError, EOFError):
-            
-            continue
-        
+# Create socket to communicate with server
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server_socket.connect((HOST, PORT))
 
+# Start the opening chat thread
 threading.Thread(target=start_chat_interface, args=(), daemon=True).start()
 
+# Waits for server's connect message
 data = pickle.loads(server_socket.recv(1024))
 
+# Treats first player to connect
 if data.code == 0:
     print("Waiting for opponent")
     data = server_socket.recv(1024)
@@ -91,13 +87,15 @@ print(
     "Game start:\n"
 )
 
+# Send confirmation message to server. First round will start.
 server_socket.sendall(b"Ready to play")
 
+# Game's main loop 
 while True:
 
     data = pickle.loads(server_socket.recv(1024))
     
-    # Mensagem de jogo
+    # Game messages
     if data.code == 2:
         print(
             "###############################################\n"+
@@ -115,14 +113,14 @@ while True:
         print("###############################################\n")
         server_socket.sendall(pickle.dumps(message.message(2, action, "")))
     
-    # Fim de rodada
+    # End round
     elif data.code == 1:
         print(data.message)
         print("\n###############################################\n")
         action = input("Enter your action: ")
         server_socket.sendall(pickle.dumps(message.message(2, action, "")))
     
-    # Fim de jogo
+    # End game
     elif data.code == 3:
         print(data.message)
         
@@ -140,12 +138,12 @@ while True:
         
         data = pickle.loads(server_socket.recv(1024))
         
-        # Algum player não quer jogar novamente
+        # Message sent when player doesn't want to play again
         if data.code == 3:
             print(data.message)
             break
         
-        # Ambos os players querem jogar novamente
+        # Both players want to play again
         else:
             print("\n###############################################\n"+data.message)
             action = input("Enter your action: ")
@@ -159,7 +157,7 @@ while True:
                     break
             server_socket.sendall(pickle.dumps(message.message(2, action, "")))
 
-
+    # Treats invalid messages
     else:
         print("Invalid message")
         break
