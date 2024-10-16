@@ -48,6 +48,8 @@ def start_chat_interface():
     input_field = tk.Entry(window, width=50)
     input_field.pack()
 
+    input_field.bind("<Return>", lambda event: send_chat(chat_socket))
+    
     send_button = tk.Button(window, text="Send", command=lambda: send_chat(chat_socket))
     send_button.pack()
 
