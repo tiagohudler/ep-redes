@@ -27,6 +27,16 @@ class game:
         self.p2Lives = 2
         self.p1Bullets = 1
         self.p2Bullets = 1
+    def endGame(self): 
+        self.p1Games = 0
+        self.p2Games = 0
+        self.p1Points = 0
+        self.p2Points = 0
+        self.rounds = 3
+        self.p1Lives = 2
+        self.p2Lives = 2
+        self.p1Bullets = 1
+        self.p2Bullets = 1
 
     # Deals with player's actions and game logic
     def action(self, p1Action, p2Action):
