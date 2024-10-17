@@ -6,7 +6,8 @@ import threading
 #INSERT BELOW THE SERVER'S IP WHEN TESTING WITH MULTIPLE MACHINES 
 #HOST = "xxx.xx.xx.xx"
 #COMMENT THE LINE BELOW WHEN TESTING WITH MULTIPLE MACHINES 
-HOST = input("Escreva o IP do servidor:")
+HOST = socket.gethostbyname(socket.gethostname())
+print(HOST)
 #HOST = "127.0.0.1"  # Endereço de interface de loopback padrão (localhost)
 PORT = 65432  # Porta para escutar (portas não privilegiadas são > 1023)
  

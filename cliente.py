@@ -1,12 +1,20 @@
 import socket, pickle
 import message
 import threading
+import  ipaddress
 import tkinter as tk
 
 #INSERT BELOW THE SERVER'S IP WHEN TESTING WITH MULTIPLE MACHINES 
 #HOST = "xxx.xx.xx.xx"
 #COMMENT THE LINE BELOW WHEN TESTING WITH MULTIPLE MACHINES 
-HOST = input("Escreva o IP do servidor:")
+while True:
+    HOST = input("Escreva o IP do servidor:")
+    try:
+        socket.inet_aton(HOST)
+    except socket.error:
+        print("IP inválido")
+    else:
+        break
 #HOST = "127.0.0.1"  # The server's hostname or IP address
 PORT = 65432  # The port used by the server
 
