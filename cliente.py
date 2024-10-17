@@ -8,7 +8,7 @@ import tkinter as tk
 #HOST = "xxx.xx.xx.xx"
 #COMMENT THE LINE BELOW WHEN TESTING WITH MULTIPLE MACHINES 
 while True:
-    HOST = input("Escreva o IP do servidor:")
+    HOST = input("Enter the server IP:")
     try:
         socket.inet_aton(HOST)
     except socket.error:
@@ -157,7 +157,6 @@ while True:
         # Both players want to play again
         else:
             print("\n###############################################\n"+data.message)
-            action = input("Enter your action: ")
             while True:
                 action = input("Enter your action: ")
                 if (action != "DEFEND" and action != "SHOOT" and action != "RELOAD"):
