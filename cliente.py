@@ -1,7 +1,6 @@
 import socket, pickle
 import message
 import threading
-import  ipaddress
 import tkinter as tk
 
 #INSERT BELOW THE SERVER'S IP WHEN TESTING WITH MULTIPLE MACHINES 

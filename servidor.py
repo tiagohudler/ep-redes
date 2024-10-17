@@ -6,8 +6,7 @@ import threading
 #INSERT BELOW THE SERVER'S IP WHEN TESTING WITH MULTIPLE MACHINES 
 #HOST = "xxx.xx.xx.xx"
 #COMMENT THE LINE BELOW WHEN TESTING WITH MULTIPLE MACHINES 
-HOST = socket.gethostbyname(socket.gethostname())
-print("Server IP: " + HOST)
+
 #HOST = "127.0.0.1"  # Endereço de interface de loopback padrão (localhost)
 PORT = 65432  # Porta para escutar (portas não privilegiadas são > 1023)
  
@@ -36,7 +35,7 @@ def transmit_message(message, conn, chats):
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 
-    s.bind((HOST, PORT))
+    s.bind(("0.0.0.0", PORT))
     # Listen and accept all 4 connections: player 1, chat 1, player 2, chat 2
     s.listen(4)
 
